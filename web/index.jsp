@@ -15,7 +15,7 @@
     <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>My Time Table v 1.0</h1>
         
         <table border ="1">
             <tr><th>Day_per</th><th>8-9</th><th>9-10</th><th>10-11</th><th>11-12</th><th>12-1</th>
@@ -31,7 +31,7 @@
              
              
               for( String day : days ){
-                    sbuff.append("<tr><td>" + day + "</td>");
+                    sbuff.append("<tr><td><b>" + day + "</b></td>");
                     for( String period : periods ){
                         Output output = FakeGenerator1.getOutputwithperiod_day(period, day, list);
                         System.out.println("----------------------OUTPUTTTTT-----" + output);

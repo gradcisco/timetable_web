@@ -53,25 +53,54 @@ public class FakeGenerator1 {
             Collections.sort(subjectsLst, new Comparator<Subject>() {
             @Override
             public int compare(Subject s1, Subject s2) {
-                    return (s1.getNo_per_week() > s2.getNo_per_week()) ? 1 : -1;
+                    return (s1.getNo_per_week() > s2.getNo_per_week()) ? -1 : 1;
                 }
             });
             
-           // System.out.println(subjectsLst);
+             System.out.println(subjectsLst);
             
             //allocate time slots
             for( Subject subject : subjectsLst ){
                 int added = 0;
+                List<String> days_already_selected = new ArrayList<>();
                 do{
 
-                    System.out.println("Size:::" + day_period_lst.size());
                     int index = new Random().nextInt(day_period_lst.size());
                     Period_Day period_Day = day_period_lst.get(index);
-                    day_period_lst.remove(period_Day);
+                    
                     String period = period_Day.getPeriod();
                     String day = period_Day.getDay();
                     
+                    if( days_already_selected.contains(day) ){
+                    boolean not_allocated = true;
+                    int try_counter = 0;
+                    while(not_allocated && try_counter > -1){
+                        index = new Random().nextInt(day_period_lst.size());
+                        period_Day = day_period_lst.get(index);
+                        day = period_Day.getDay();
+                        period = period_Day.getPeriod();
+                        
+                        if( days_already_selected.contains(day) ){
+                            
+                            
+                        }
+                        else{
+                        not_allocated = false;
+                        }
+                          
+                        System.out.println("-------retrying--------" + try_counter);
+                       try_counter++;
+                    }
+                    }
+                    
+                    
+                    
+                    day_period_lst.remove(period_Day);
+
+                    
                     outputList.add(new Output(subject.getName(), period, day));
+                    System.out.println(new Output(subject.getName(), period, day));
+                    days_already_selected.add(day);
                     
                     added++;
                 }while( added < subject.getNo_per_week());
