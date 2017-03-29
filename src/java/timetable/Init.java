@@ -22,14 +22,14 @@ public class Init {
         subject_List.add(new Subject("Eng", 5));
         subject_List.add(new Subject("Cre", 3));
         subject_List.add(new Subject("Mat", 5));
-        subject_List.add(new Subject("Agr", 4));
+        subject_List.add(new Subject("Agr/Hsc/Cmp", 4));
         subject_List.add(new Subject("Kis", 5));
         subject_List.add(new Subject("Hist", 3));
         subject_List.add(new Subject("Bio", 4));
         subject_List.add(new Subject("Geo", 3));
         subject_List.add(new Subject("Phy", 4));
         subject_List.add(new Subject("Chem", 4));
-        subject_List.add(new Subject("Hsc", 4));
+
         
         GlobalConstatts.subjects = subject_List;
         

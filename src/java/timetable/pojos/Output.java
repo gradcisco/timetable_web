@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class Output {
     
-    private String subject;
+    private String subject = "";
     private String period;
     private String day;
     private int code;

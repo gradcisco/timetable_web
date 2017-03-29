@@ -5,17 +5,12 @@
  */
 package timetable;
 
-import com.sun.xml.internal.ws.api.ha.HaInfo;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import timetable.pojos.Period_Day;
 import timetable.pojos.Subject;
 
@@ -24,9 +19,12 @@ import timetable.pojos.Subject;
  * @author cisco
  */
 public class GlobalConstatts {
-   public static  String[] subjectsArray = {"Eng","Kis","Maths","Agr","Business","Hsc","Cre","Hist","Geo","Chem","Bio","Phy"};
+    // "9:20 - 9:30", "10:50 - 11:15",  "1:15 - 2:00",
+   public static  String[] subjectsArray = {"Eng","Kis","Maths","Agr/Hsc","Business","Cre","Hist","Geo","Chem","Bio","Phy"};
     
-    public static String[] periods = {"8-9","9-10","10-11","11-12","12-1","1-2","2-3","3-4","4-5"};
+    public static String[] raw_periods = {"8:00 - 8:40" , "8:40 - 9:20","9:20 - 9:30","9:30 - 10:10","10:10 - 10:50", "10:50 - 11:15","11:15 - 11:55","11:55 - 12:35","12:35 - 1:15","1:15 - 2:00","2:00 - 2:40","2:40 - 3:20","3:20 - 4:00"};
+    
+    public static String[] periods = {"8:00 - 8:40" , "8:40 - 9:20","9:30 - 10:10","10:10 - 10:50", "11:15 - 11:55","11:55 - 12:35","12:35 - 1:15","2:00 - 2:40","2:40 - 3:20","3:20 - 4:00"};
     
     public static String[] classes = {"1","2","3","4"};
     
