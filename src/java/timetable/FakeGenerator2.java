@@ -38,143 +38,147 @@ import timetable.teachers.Teacher_initializer;
  */
 public class FakeGenerator2 {
     
+    /**
+     * Do allocations of teacher to lessons in classes
+     * for periods
+     * @return list of outputs
+     */
     public static List<List<Output1>> encodeOutputs(){
+        
         String filename = "/home/cisco/NetBeansProjects/Timetable_web/logs/";
+        
         BufferedWriter bw = null;
         FileWriter fw = null;
         List<List<Output1>> olist = new ArrayList<>();
+        
         //output objects
         List<Output1> output_list = new ArrayList<>();
+        
         //get all streams
         List<Stream> streams_list = Streams_initializer.getStreams();
-       // System.out.println("Streams -----" + streams_list.toString());
         
         //get all subjects
         List<Subject1> subject_list = Subjects_initializer.getSubjects();
         
         //get all periods
-       // List<Period> period_list = Periods_initializer.getPeriodsNotBreaks();
         List<Period> period_list = Periods_initializer.getPeriods();
-        //System.out.println("Periods------" + period_list.toString());
-        
+         
         //get all allocatios
         List<Class_stream_teacher_subject_Allocations> allocation_list = Allocation_initializer.getAllocations();
-       // System.out.println("Allocations------" + allocation_list.toString());
-        
+               
         //get all days
         List<Day> day_list = Days_Initializer.getDays();
         
-        
-             
+                  
              //loop through streams
              for(Stream s : streams_list){
+                 
                  //get all day periods
                  List<Day_period> day_periodList = Periods_initializer.getDay_periods();
-                 System.out.println(s + "****************************************************");
-                         //get subjects
-                         List<Subject1> newList = new ArrayList<>(subject_list.subList(10,18));
-                         if(s.getClass_id() == 1 || s.getClass_id() == 2){
-                             newList = new ArrayList<>(subject_list.subList(0,10));
-                             System.out.println("Subjects--------" + newList.toString());
+                 
+             
+                 //get subjects
+                 List<Subject1> newList = new ArrayList<>(subject_list.subList(10,18));
+                 
+                 if(s.getClass_id() == 1 || s.getClass_id() == 2){
+                     
+                     newList = new ArrayList<>(subject_list.subList(0,10));
+                     
+                     
+                 }
+
+                 //sort the subject list
+                 Collections.sort(newList, new Comparator<Subject1>() {
+
+                 @Override
+                 public int compare(Subject1 s1, Subject1 s2) {
+                    return (s1.getNo_per_week() > s2.getNo_per_week()) ? -1 : 1;
+                 }
+                 });
+
+                 //loop through subjects
+                int ind = 0;
+                for( Subject1 subject : newList ){
+                    
+                         String filenames = "";
+                         filenames =   filename + s.getId() + s.getName() + s.getClass_id() + subject.getName() + "log.txt";
+                         
+                         int added = 0;
+                         ind++;
+                         Day_period dayPeriod = null;
+                        
+                         List<Day_period> day_period_list = new ArrayList<>();
+                         
+                         //get responsibe teacher
+                         Teacher t = getTeacher(s.getId() , subject.getId() , allocation_list , s.getClass_id());
+                       //  System.out.println("Teacher----" + t);
+                         if(t == null){
+                             
+                           //  System.out.println("SID----" + s.getId() + "SUID---" + subject.getId());
                          }
+                         
+                         
+                         //list of days selected
+                         List<Day> daysSelected_list = new ArrayList<>();
+                         List<Integer> selecteddayIds = new ArrayList<>();
 
-                             //sort the subject list
-                       Collections.sort(newList, new Comparator<Subject1>() {
+                         do{
 
-                        @Override
-                        public int compare(Subject1 s1, Subject1 s2) {
-                           return (s1.getNo_per_week() > s2.getNo_per_week()) ? -1 : 1;
-                        }
-                        });
+                             int try_counter = 0;
+                             Output1 oput1 = null;
+                             boolean not_allocated = true;
 
-                        //System.out.println("Sorted list------" + newList);
+                             while(not_allocated && try_counter > -1){
 
-                         //loop through subjects
-                        int ind = 0;
-                        for( Subject1 subject : newList ){
-                            System.out.println("------------------" + subject);
-                            String filenames = "";
-                            filenames =   filename + s.getId() + s.getName() + s.getClass_id() + subject.getName() + "log.txt";
-                                 int added = 0;
-                                 ind++;
-                                 Day day = null;
-                                 Day_period dayPeriod = null;
-                                 List<Day> tmp_day_list = Days_Initializer.getDays();
-                                 //get responsibe teacher
-                                 Teacher t = getTeacher(s.getId() , subject.getId() , allocation_list , s.getClass_id());
-                                 System.out.println("Teacher----" + t);
-                                 if(t == null){
-                                     System.out.println("SID----" + s.getId() + "SUID---" + subject.getId());
-                                 }
-                                 //list of days selected
-                                 List<Day> daysSelected_list = new ArrayList<>();
-                                 
-                                 do{
+                                     //new analogy----pick a day period
+                                     int index2 = new Random().nextInt(day_periodList.size());
+                                     dayPeriod = day_periodList.get(index2);
+
+                                     oput1 = new Output1(dayPeriod.getDayId(), dayPeriod.getPeriodId(), t.getId(), subject.getId(), s.getId(), s.getClass_id());
+
+                                     //check that teacher is free as selected time
+
+                                     if(output_list.contains(oput1) || selecteddayIds.contains(dayPeriod.getDayId()) || isTeacherBusy(t, dayPeriod, olist)){//teacher not free need to loop
+                                         
+                                           System.out.println("-------retrying--------" + try_counter);
+                                           try_counter++;
+                                     }
                                      
-                                     int try_counter = 0;
-                                     Output1 oput1 = null;
-                                     boolean not_allocated = true;
+                                     
+                                     else{
+                                         
+                                          not_allocated = false;
 
-                                     while(not_allocated && try_counter > -1){
-                                             //pick a period at random
-                                             int index = new Random().nextInt(period_list.size());
-                                             Period period = period_list.get(index);
-
-                                             //pick a day at random
-                                             int index1 = new Random().nextInt(tmp_day_list.size());
-                                             day = tmp_day_list.get(index1);
-                                             
-                                             //new analogy----pick a day period
-                                             int index2 = new Random().nextInt(day_periodList.size());
-                                             dayPeriod = day_periodList.get(index2);
-                                             //oput1 = new Output1(day.getId(), period.getId(), t.getId(), subject.getId(), s.getId(), s.getClass_id());
-                                             oput1 = new Output1(dayPeriod.getDayId(), dayPeriod.getPeriodId(), t.getId(), subject.getId(), s.getId(), s.getClass_id());
-
-                                             if(output_list.contains(oput1)){
-                                                 System.out.println("===============================I caught a bug ========================");
-                                             }
-                                             //check that teacher is free as selected time 
-                                             if(output_list.contains(oput1) || daysSelected_list.contains(day)){//teacher not free need to loop
-                                                   System.out.println("-------retrying--------" + try_counter);
-                                                   try_counter++;
-                                             }
-                                             else{
-                                                  not_allocated = false;
-
-                                             }
-
-                                            
                                      }
 
-                                     
-                                     output_list.add(oput1);
-                                     System.out.println("----------------------ORIGINAL SIZE-----------" + day_periodList.size());
-                                     day_periodList.remove(dayPeriod);
-                                     System.out.println("====================REMOVED+++++" + dayPeriod.toString() + "=============");
-                                     System.out.println("----------------------New SIZE-----------" + day_periodList.size());
-                                     writeLog(oput1.toString(), filenames);
-                                     daysSelected_list.add(day);
-                                     added++;
-                                     
-                                     //remove day from days list for nice randomness
-                                     tmp_day_list.remove(day);
-                                     //System.out.println("*******************************************************" + subject);
+
+                             }
 
 
+                             output_list.add(oput1);
+                             //System.out.println("----------------------ORIGINAL SIZE-----------" + day_periodList.size());
+                             day_periodList.remove(dayPeriod);
+                            // System.out.println("====================REMOVED+++++" + dayPeriod.toString() + "=============");
+                            // System.out.println("----------------------New SIZE-----------" + day_periodList.size());
+                             writeLog(oput1.toString(), filenames);
+                             
+                             day_period_list.add(dayPeriod);
+                             selecteddayIds.add(dayPeriod.getDayId());
+                             added++;
 
-                                  }while(added < subject.getNo_per_week());
-                                 writeLog("================================================\n" , filenames);
-                                 writeLog("Allocated ---" + subject.getName() + "****" + output_list.toString() + "\n" , filenames);
-                                 writeLog("================================================\n" , filenames);
-                                 //olist.add(output_list);
-                                 //output_list.clear();
-                            }
+                          }
+                         
+                         while(added < subject.getNo_per_week());
+                         
+                         writeLog("================================================\n" , filenames);
+                         writeLog("Allocated ---" + subject.getName() + "****" + output_list.toString() + "\n" , filenames);
+                         writeLog("================================================\n" , filenames);
+                         //olist.add(output_list);
+                         //output_list.clear();
+                    }
                         olist.add(output_list);
                  }
-                 System.out.println("------------------------------------------------------------------");
-                 System.out.println(output_list);
-                 
-                 System.out.println("========================" + olist.size());
+
                  try {
 
 			String content = "This is the content to write into file\n";
@@ -191,7 +195,7 @@ public class FakeGenerator2 {
                         bw.write("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");  
                         }
 
-			System.out.println("Done");
+			//System.out.println("Done");
 
 		} catch (IOException e) {
 
@@ -225,97 +229,134 @@ public class FakeGenerator2 {
 
     }
     
+    /**
+     * Get teacher associated with a stream,subject,class from allocations list
+     * @param streamId
+     * @param subjectId
+     * @param list
+     * @param classId
+     * @return 
+     */
     public static Teacher getTeacher(int streamId , int subjectId , List<Class_stream_teacher_subject_Allocations> list , int classId){
+        
         Teacher tcha = null;
         List<Teacher> tList = Teacher_initializer.getTeachers();
         List<Class_form> classes_list = Classes_initializer.getClasses();
+        
         int cId = 0;
         int sid = 0;
         int subid = 0;
 
         for(Class_stream_teacher_subject_Allocations allocation : list){
+            
+            
             cId = allocation.getClass_id();
             sid = allocation.getStream_id();
             subid = allocation.getSubject_id();
+            
             if(allocation.getStream_id() == streamId && allocation.getSubject_id() == subjectId && allocation.getClass_id() == classId){
+                
                 Teacher t = new Teacher(allocation.getTeacher_id(), "", "");
                 int index = tList.indexOf(t);
                 tcha = tList.get(index);
+                
+                
                 return tcha;
                 
             }
 
         }
                     
-            if(tcha == null){
-            System.out.println("StreamId-----" + streamId + "++++++" + sid);
-            System.out.println("subjectId-----" + subjectId + "++++++" + subid);
-            System.out.println("classId-----" + classId + "+++++++" + cId);
-            System.out.println("list-----" + list);
-            
-        }
        return tcha; 
+       
     }
     
+    
+    /**
+     * 
+     * Output a string of table contents to be printed
+     * an interpretation of the sampled outputs
+     * @param olist
+     * 
+     * @return 
+     * 
+     */
     public static String decodeOutputs(List<List<Output1>> olist){
+        
         StringBuffer outputBuffer = new StringBuffer();
         int count = 1;
        
         //get all periods
         List<Period> periodList = Periods_initializer.getPeriods();
-       // outputBuffer.append("<tr><th>Day/Period</th>");
-       // int index = 0;
-       // for(Period p : periodList){
-          // outputBuffer.append("<th>" + p.getStart_time() + "-" + p.getEnd_time() + "</th>");
-       // }
+
         outputBuffer.append("</tr>");
    
-                //loop through streams 
-                List<Stream> streamsList = Streams_initializer.getStreams();
-                for(Stream st : streamsList){
-                     outputBuffer.append("<h1>TT for stream---" + st.getClass_id() + "--" + st.getName() + "</h1>");
-                     outputBuffer.append("<table border='1'>");
-                    //loop through days
-                    List<Day> daysList = Days_Initializer.getDays();
-                    int loopCount = 0;
-                    for(Day d : daysList){
-                        //loop through periods
-                        List<Period> periodLists = Periods_initializer.getPeriods();
-                        if( loopCount != 0){
-                            outputBuffer.append("<tr><td>" + d.getName() + "</td>");
-                        }
-                        for(Period p : periodLists){
-                            if(loopCount == 0){
-                                loopCount++;
-                                outputBuffer.append("<tr><th>Day/Period</th>");
-                                for(Period p1 : periodList){
-                                    outputBuffer.append("<th>" + p1.getStart_time() + "-" + p1.getEnd_time() + "</th>");
-                                }
-                                outputBuffer.append("</tr>");
-                                outputBuffer.append("<tr><td>" + d.getName() + "</td>");
-                            }
-                            
-                            
-                            if(p.isIs_break()){
-                              outputBuffer.append("<td>" + "BREAK" + "</td>"); 
-                              continue;
-                            }
-                          
-                            //Output1 o1 = new Output1(d.getId(), p.getId(), 0, 0, st.getId());
-                            Output1 o1 = new Output1(d.getId(), p.getId(), 0, 0, st.getId(), st.getClass_id());
-                            String subj = getSubject(d, p, st, olist);
-                            outputBuffer.append("<td>" + subj + "</td>");
-                            
-                          
-                            
-                        }
-                        outputBuffer.append("</tr>");
-                    }
+        //loop through streams 
+        List<Stream> streamsList = Streams_initializer.getStreams();
+        
+        for(Stream st : streamsList){
+            
+             outputBuffer.append("<h1>TT for stream---" + st.getClass_id() + "--" + st.getName() + "</h1>");
+             outputBuffer.append("<table border='1'>");
+             
+            //loop through days
+            List<Day> daysList = Days_Initializer.getDays();
+            int loopCount = 0;
+            
+            
+            for(Day d : daysList){
+                
+                //loop through periods
+                List<Period> periodLists = Periods_initializer.getPeriods();
+                
+                if( loopCount != 0){
                     
-                    outputBuffer.append("</table>");
+                    outputBuffer.append("<tr><td>" + d.getName() + "</td>");
+                    
                 }
                 
-            return outputBuffer.toString();
+                for(Period p : periodLists){
+                    
+                    if(loopCount == 0){
+                        
+                        loopCount++;
+                        outputBuffer.append("<tr><th>Day/Period</th>");
+                        
+                        for(Period p1 : periodList){
+                            
+                            outputBuffer.append("<th>" + p1.getStart_time() + "-" + p1.getEnd_time() + "</th>");
+                            
+                        }
+                        
+                        outputBuffer.append("</tr>");
+                        outputBuffer.append("<tr><td>" + d.getName() + "</td>");
+                        
+                    }
+
+
+                    if(p.isIs_break()){
+                        
+                      outputBuffer.append("<td>" + "<b>BREAK</b>" + "</td>"); 
+                      continue;
+                      
+                    }
+
+                    //Output1 o1 = new Output1(d.getId(), p.getId(), 0, 0, st.getId());
+                    Output1 o1 = new Output1(d.getId(), p.getId(), 0, 0, st.getId(), st.getClass_id());
+                    String subj = getSubject(d, p, st, olist);
+                    outputBuffer.append("<td>" + subj + "</td>");
+
+                }
+                
+                outputBuffer.append("</tr>");
+                
+            }
+
+            outputBuffer.append("</table>");
+            
+        }
+                
+        return outputBuffer.toString();
 
     }
     
@@ -341,6 +382,7 @@ public class FakeGenerator2 {
     
     
     public static void writeLog(String log , String filename){
+        
           BufferedWriter bw = null;
           FileWriter fw = null;
           
@@ -377,6 +419,35 @@ public class FakeGenerator2 {
                 }
 
         }
+    }
+    
+    
+
+    /**
+     * Check whether teacher is busy --by checking if hes allocated 
+     * another lesson same day same period
+     * @param teacher
+     * @param dayPeriod
+     * @param olist
+     * @return 
+     */
+    public static boolean isTeacherBusy(Teacher teacher , Day_period dayPeriod , List<List<Output1>> olist){
+        
+        for( List<Output1> outputList : olist ){
+            
+            for( Output1 output1 : outputList ){
+                
+                if( output1.getDayId() == dayPeriod.getDayId() && output1.getPeriodId() == dayPeriod.getPeriodId() && output1.getTeacherId() == teacher.getId() ){
+                    
+                    return true;
+                    
+                }
+                
+            }
+            
+        }
+        
+        return false;
     }
     
 }
