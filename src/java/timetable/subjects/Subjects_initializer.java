@@ -89,7 +89,7 @@ public class Subjects_initializer {
         //form 1 & 2
         subject_list.add(new Subject1(1, "Eng", 5, false, sarrays, 1));
         subject_list.add(new Subject1(2, "Kis", 5, false, sarrays, 1));
-        subject_list.add(new Subject1(3, "Mat", 5, true, sarrays, 1));
+        subject_list.add(new Subject1(3, "Mat", 6, true, sarrays, 1));
         subject_list.add(new Subject1(4, "Chem", 4, true, sarrays, 1));
         subject_list.add(new Subject1(5, "Bio", 4, true, sarrays, 1));
         subject_list.add(new Subject1(6, "Phy", 4, true, sarrays, 1));
@@ -99,16 +99,35 @@ public class Subjects_initializer {
         subject_list.add(new Subject1(10, "Agr_Hsc_Bs_comp", 4, true, sarrays, 1));
         
          //form 3 & 4
-        subject_list.add(new Subject1(11, "Eng", 5, false, sarrays, 1));
-        subject_list.add(new Subject1(12, "Kis", 5, false, sarrays, 1));
-        subject_list.add(new Subject1(13, "Mat", 5, true, sarrays, 1));
+        subject_list.add(new Subject1(11, "Eng", 7, false, sarrays, 1));
+        subject_list.add(new Subject1(12, "Kis", 7, false, sarrays, 1));
+        subject_list.add(new Subject1(13, "Mat", 7, true, sarrays, 1));
         subject_list.add(new Subject1(14, "Chem", 4, true, sarrays, 1));
         subject_list.add(new Subject1(15, "Bio_Phy", 4, true, sarrays, 1));
-        subject_list.add(new Subject1(16, "Hist_Geo", 3, false, sarrays, 1));
-        subject_list.add(new Subject1(17, "Cre", 3, false, sarrays, 1));
+        subject_list.add(new Subject1(16, "Hist_Geo", 4, false, sarrays, 1));
+        subject_list.add(new Subject1(17, "Cre", 4, false, sarrays, 1));
         subject_list.add(new Subject1(18, "Agr_Hsc_Bs_comp", 4, true, sarrays, 1));
         
         return subject_list;
     }
+    
+     public static List<Subject1> getSubjectsf3v(){
+        List<Subject1> subject_list = new ArrayList<>();
+        String[] sarrays = {};
+
+        
+         //form 3 & 4
+        subject_list.add(new Subject1(11, "Eng", 7, false, sarrays, 1));
+        subject_list.add(new Subject1(12, "Kis", 7, false, sarrays, 1));
+        subject_list.add(new Subject1(13, "Mat", 7, true, sarrays, 1));
+        subject_list.add(new Subject1(14, "Chem", 4, true, sarrays, 1));
+       // subject_list.add(new Subject1(15, "Bio_Phy", 4, true, sarrays, 1));
+       // subject_list.add(new Subject1(16, "Hist_Geo", 3, false, sarrays, 1));
+        subject_list.add(new Subject1(17, "Cre", 4, false, sarrays, 1));
+       // subject_list.add(new Subject1(18, "Agr_Hsc_Bs_comp", 4, true, sarrays, 1));
+        
+        return subject_list;
+    }
+    
     
 }

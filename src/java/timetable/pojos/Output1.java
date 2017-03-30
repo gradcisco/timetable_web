@@ -74,6 +74,12 @@ public class Output1 {
         this.classId = classId;
     }
 
+    public Output1() {
+        
+    }
+    
+    
+
     @Override
     public String toString() {
         return "Output1{" + "dayId=" + dayId + ", periodId=" + periodId + ", teacherId=" + teacherId + ", subjectId=" + subjectId + ", streamId=" + streamId + ", classId=" + classId + '}';

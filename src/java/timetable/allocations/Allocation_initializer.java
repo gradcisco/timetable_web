@@ -178,6 +178,8 @@ public class Allocation_initializer {
           allocation_list.add(new Class_stream_teacher_subject_Allocations(8, 1, 9, 12, 1));
           allocation_list.add(new Class_stream_teacher_subject_Allocations(9, 1, 10, 5, 1));
           allocation_list.add(new Class_stream_teacher_subject_Allocations(10, 1, 8, 12, 1));
+          //allocation_list.add(new Class_stream_teacher_subject_Allocations(10, 1, 8, 12, 1));
+          //allocation_list.add(new Class_stream_teacher_subject_Allocations(10, 1, 8, 12, 1));
           
           
           //form 2

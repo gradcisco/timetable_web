@@ -47,6 +47,8 @@ public class FakeGenerator2 {
         
         String filename = "/home/cisco/NetBeansProjects/Timetable_web/logs/";
         
+        List<Output1> f3VsameOutputList = new ArrayList<>();
+        
         BufferedWriter bw = null;
         FileWriter fw = null;
         List<List<Output1>> olist = new ArrayList<>();
@@ -75,17 +77,25 @@ public class FakeGenerator2 {
                  
                  //get all day periods
                  List<Day_period> day_periodList = Periods_initializer.getDay_periods();
+                 System.out.println("---------------------------------------------------");
+                 System.out.println(day_periodList.size());
+                 System.out.println("---------------------------------------------------");
                  
              
+                 
                  //get subjects
                  List<Subject1> newList = new ArrayList<>(subject_list.subList(10,18));
-                 
                  if(s.getClass_id() == 1 || s.getClass_id() == 2){
                      
                      newList = new ArrayList<>(subject_list.subList(0,10));
                      
                      
                  }
+                 
+                if( s.getId() == 2 && s.getClass_id() == 3){
+                     //newList = new ArrayList<>(subject_list.subList(10,17));
+                     newList = Subjects_initializer.getSubjectsf3v();
+                }
 
                  //sort the subject list
                  Collections.sort(newList, new Comparator<Subject1>() {
@@ -99,6 +109,37 @@ public class FakeGenerator2 {
                  //loop through subjects
                 int ind = 0;
                 for( Subject1 subject : newList ){
+                    
+          
+                              //add 3v data
+                         boolean stillBlacklisting = true;
+                         if( (s.getId() == 2 && s.getClass_id() == 3) && stillBlacklisting ){
+                           for( Output1 outPut1 : f3VsameOutputList ){
+                               Output1 oput1 = new Output1();
+                               oput1.setClassId(outPut1.getClassId());
+                               oput1.setDayId(outPut1.getDayId());
+                               oput1.setPeriodId(outPut1.getPeriodId());
+                               oput1.setStreamId(2);
+                               oput1.setSubjectId(outPut1.getSubjectId());
+                               System.out.println("--------------------------------");
+                               System.out.println(oput1);
+                               System.out.println("--------------------------------");
+                              // outPut1.setStreamId(2);
+                               output_list.add(oput1);
+                               
+                               //do blackListing
+                               System.out.println("*******************************BLACKLISTING");
+                               System.out.println(day_periodList.size());
+                               System.out.println("*******************************BLACKLISTING");
+                               blackList(day_periodList, outPut1);
+                               System.out.println("*******************************BLACKLISTING");
+                               System.out.println(day_periodList.size());
+                               System.out.println("*******************************BLACKLISTING");
+                           }
+                           
+                           stillBlacklisting = false;
+
+                         }
                     
                          String filenames = "";
                          filenames =   filename + s.getId() + s.getName() + s.getClass_id() + subject.getName() + "log.txt";
@@ -128,7 +169,7 @@ public class FakeGenerator2 {
                              Output1 oput1 = null;
                              boolean not_allocated = true;
 
-                             while(not_allocated && try_counter > -1){
+                             while(not_allocated && try_counter < 100){
 
                                      //new analogy----pick a day period
                                      int index2 = new Random().nextInt(day_periodList.size());
@@ -156,6 +197,13 @@ public class FakeGenerator2 {
 
 
                              output_list.add(oput1);
+                             
+                             //add 3v data
+                             if( ( subject.getId() == 18 || subject.getId() == 15 || subject.getId() == 16) && (s.getId() == 1 && s.getClass_id() == 3) ){
+                                 f3VsameOutputList.add(oput1); 
+                                System.out.println("===================================================================PPPPPP=======");
+                        
+                             }
                              //System.out.println("----------------------ORIGINAL SIZE-----------" + day_periodList.size());
                              day_periodList.remove(dayPeriod);
                             // System.out.println("====================REMOVED+++++" + dayPeriod.toString() + "=============");
@@ -448,6 +496,16 @@ public class FakeGenerator2 {
         }
         
         return false;
+    }
+    
+    public static void blackList( List<Day_period> day_periodList , Output1 output1){
+        
+        for( Day_period dp : day_periodList ){
+            if( dp.getDayId() == output1.getDayId() && dp.getPeriodId() == output1.getPeriodId() ){
+                day_periodList.remove(dp);
+                return;
+            }
+        }
     }
     
 }
