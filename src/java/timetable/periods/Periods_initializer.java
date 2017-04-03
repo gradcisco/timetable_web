@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import timetable.days.Days_Initializer;
 import timetable.pojos.Day;
+import timetable.pojos.Day_Double_Periods;
 import timetable.pojos.Day_period;
 import timetable.pojos.Period;
 
@@ -94,6 +95,30 @@ public class Periods_initializer {
         }
         
         return dayPeriod_lists;
+    }
+    
+    public static List<Day_Double_Periods> getDoubleableLessons(){
+        
+        String double_combinations[] = {"1,2" , "4,5" , "7,8" , "8,9" , "11,12" , "12,13"};
+        List<Day> daysList = Days_Initializer.getDays();
+        List<Day_Double_Periods> double_periods_list = new ArrayList<>();
+        
+        for( Day day : daysList ){
+            
+            for( String double_combination : double_combinations ){
+                
+                String[] periods = double_combination.split(",");
+                int period1Id = Integer.parseInt(periods[0]);
+                int period2Id = Integer.parseInt(periods[1]);
+                Day_Double_Periods ddPeriod = new Day_Double_Periods(day.getId(), period1Id, period2Id);
+                double_periods_list.add(ddPeriod);
+                
+            }
+            
+        }
+        
+        return double_periods_list;
+        
     }
     
     public static void main(String args[]){

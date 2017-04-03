@@ -19,6 +19,7 @@ public class Subject1 implements Comparator<Subject1>{
     private boolean is_double;
     private String[] stroked_with;
     private int class_id;
+    private int no_of_doubles;
 
     public int getId() {
         return id;
@@ -44,6 +45,12 @@ public class Subject1 implements Comparator<Subject1>{
         return class_id;
     }
 
+    public int getNo_of_doubles() {
+        return no_of_doubles;
+    }
+    
+    
+
     
 
     @Override
@@ -59,6 +66,18 @@ public class Subject1 implements Comparator<Subject1>{
         this.stroked_with = stroked_with;
         this.class_id = class_id;
     }
+
+    public Subject1(int id, String name, int no_per_week, boolean is_double, String[] stroked_with, int class_id, int no_of_doubles) {
+        this.id = id;
+        this.name = name;
+        this.no_per_week = no_per_week;
+        this.is_double = is_double;
+        this.stroked_with = stroked_with;
+        this.class_id = class_id;
+        this.no_of_doubles = no_of_doubles;
+    }
+    
+    
 
     @Override
     public int compare(Subject1 o1, Subject1 o2) {
